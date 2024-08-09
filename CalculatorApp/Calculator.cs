@@ -17,7 +17,7 @@ public class Calculator
             case "divide":
                 return Divide(num1, num2);
             default:
-                throw new InvalidOperationException("The specified operation is not supported. ");
+                return new Failure<double>(new InvalidOperationException("The specified operation is not supported."));
         }
 
     }
@@ -41,7 +41,7 @@ public class Calculator
     {
         if (num2 == 0)
         {
-            return new Failure<double>(new DivideByZeroException("Cannot divide by zero"));
+            return new Failure<double>(new DivideByZeroException("Cannot divide by zero."));
         }
         return new Success<double>(num1 / num2);
     }
