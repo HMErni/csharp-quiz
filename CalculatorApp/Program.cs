@@ -1,4 +1,6 @@
-﻿namespace CalculatorApp;
+﻿using CalculatorApp.Model;
+
+namespace CalculatorApp;
 
 class Program
 {
@@ -6,6 +8,7 @@ class Program
     {
         try
         {
+
             Console.WriteLine("Enter the first number:");
             double num1 = Convert.ToDouble(Console.ReadLine());
 
@@ -17,28 +20,31 @@ class Program
 
             var calculator = new Calculator();
 
-            double result = calculator.PerformOperation(num1, num2, operation);
-            Console.WriteLine($"The result is: {result}");
+            Result<double> getResult = calculator.PerformOperation(num1, num2, operation);
+
+            switch (getResult)
+            {
+                case Success<double> { value: var result }:
+                    Console.WriteLine($"The result is: {result}");
+                    break;
+                case Failure<double> { exception: InvalidOperationException ex }:
+                    Console.WriteLine(ex.Message);
+                    break;
+                case Failure<double> { exception: DivideByZeroException ex }:
+                    Console.WriteLine(ex.Message);
+                    break;
+                case Failure<double> { exception: Exception ex }:
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    break;
+            }
         }
         catch (FormatException)
         {
             Console.WriteLine("Invalid input. Please enter a valid numeric values.");
         }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-        catch (DivideByZeroException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Calculation attempt finished.");
-        }
+
+        Console.WriteLine("Calculation attempt finished.");
+
+
     }
 }
