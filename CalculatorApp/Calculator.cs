@@ -5,9 +5,9 @@ namespace CalculatorApp;
 
 public class Calculator
 {
-    private readonly ILogger<Calculator> _logger;
+    private readonly ILogger _logger;
 
-    public Calculator(ILogger<Calculator> logger)
+    public Calculator(ILogger logger)
     {
         _logger = logger;
     }
