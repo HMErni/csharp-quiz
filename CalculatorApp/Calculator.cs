@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CalculatorApp;
 
-public class Calculator : ICalculator
+public class Calculator
 {
     private readonly ILogger<Calculator> _logger;
 
@@ -25,7 +25,7 @@ public class Calculator : ICalculator
             case "divide":
                 return Divide(num1, num2);
             default:
-                _logger.LogInformation("The specified operation is not supported.");
+                _logger.LogError("The specified operation is not supported.");
 
                 return new Failure<double>(new InvalidOperationException("The specified operation is not supported."));
         }
@@ -50,7 +50,7 @@ public class Calculator : ICalculator
     {
         if (num2 == 0)
         {
-            _logger.LogInformation("Cannot divide by zero.");
+            _logger.LogError("Cannot divide by zero.");
             return new Failure<double>(new DivideByZeroException("Cannot divide by zero."));
         }
         return new Success<double>(num1 / num2);
