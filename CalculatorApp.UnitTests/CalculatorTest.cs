@@ -1,4 +1,6 @@
 using CalculatorApp.Model;
+using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using Shouldly;
 
@@ -8,11 +10,13 @@ namespace CalculatorApp.Tests
     public class CalculatorTests
     {
         private Calculator _calculator;
+        private ILogger<Calculator> _logger;
 
         [SetUp]
         public void Setup()
         {
-            _calculator = new Calculator();
+            _logger = Mock.Of<ILogger<Calculator>>();
+            _calculator = new Calculator(_logger);
         }
 
         [TestCase(1, 2)]
