@@ -9,13 +9,37 @@ class Program
     {
         var programLogger = LoggerProvider.CreateLogger<Program>();
         var calculatorLogger = LoggerProvider.CreateLogger<Calculator>();
+        var inputLogger = LoggerProvider.CreateLogger<InputParser>();
+
+        var inputParser = new InputParser(inputLogger);
+
         try
         {
+
+            Result<double> input;
+
             Console.WriteLine("Enter the first number:");
-            double num1 = convertToDouble(Console.ReadLine() ?? string.Empty);
+            input = inputParser.ConvertToDouble(Console.ReadLine() ?? string.Empty);
+
+            if (!input.isSuccess)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid numeric values.");
+                return;
+            }
+
+            double num1 = input is Success<double> { value: var result1 } ? result1 : 0;
 
             Console.WriteLine("Enter the second number:");
-            double num2 = convertToDouble(Console.ReadLine() ?? string.Empty);
+            input = inputParser.ConvertToDouble(Console.ReadLine() ?? string.Empty);
+
+            if (!input.isSuccess)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid numeric values.");
+                return;
+            }
+
+            double num2 = input is Success<double> { value: var result2 } ? result2 : 0;
+
 
             Console.WriteLine("Enter the operation (add, subtract, multiply, divide):");
             string operation = Console.ReadLine()?.ToLower() ?? string.Empty;
@@ -40,11 +64,6 @@ class Program
                     break;
             }
         }
-        catch (FormatException ex)
-        {
-            Console.WriteLine(ex.Message);
-            programLogger.LogError(ex, "An error occured: {}", ex.Message);
-        }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
@@ -54,22 +73,5 @@ class Program
         {
             Console.WriteLine("Calculation attempt finished.");
         }
-
-    }
-
-    static double convertToDouble(string input)
-    {
-        double result;
-
-        try
-        {
-            result = Convert.ToDouble(input);
-        }
-        catch (FormatException)
-        {
-            throw new FormatException("Invalid input. Please enter a valid numeric values.");
-        }
-
-        return result;
     }
 }
